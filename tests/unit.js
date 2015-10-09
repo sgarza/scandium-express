@@ -1,7 +1,7 @@
 var Promise = require('bluebird');
 var expect = require('chai').expect;
 
-require('./../../');
+require('./../');
 
 describe('Scandium-Express Unit Tests', function() {
 
@@ -11,11 +11,19 @@ describe('Scandium-Express Unit Tests', function() {
     expect(role).is.an.instanceof(Sc.Role);
   });
 
+  it('Should fail to create a Role Instance', function() {
+    expect(function() { return new Sc.Role()}).to.throw(Error)
+  })
+
   it('Should create a Resource Instance', function() {
     var resource = new Sc.Resource('videos');
 
     expect(resource).is.an.instanceof(Sc.Resource);
   });
+
+  it('Should fail to create a Resource Instance', function() {
+    expect(function() { return new Sc.Resource()}).to.throw(Error)
+  })
 
   it('Should add a role to the ACL roles registry', function() {
     var role = new Sc.Role('visitor');
@@ -23,6 +31,12 @@ describe('Scandium-Express Unit Tests', function() {
     Sc.ACL.addRole(role);
 
     expect(Sc.ACL.roles[role.id].instance).to.equal(role);
+  });
+
+  it('Should fail when adding a role that already exists', function() {
+    var role = new Sc.Role('visitor');
+
+    expect(function() { return Sc.ACL.addRole(role)}).to.throw(Error);
   });
 
   it('Should add a resource to the ACL resources registry', function() {
@@ -52,5 +66,26 @@ describe('Scandium-Express Unit Tests', function() {
 
     expect(Sc.ACL.roles[role.id].parents).include(Sc.ACL.roles['visitor'].instance);
     expect(Sc.ACL.roles[role.id].parents).include(Sc.ACL.roles['user'].instance);
+  });
+
+  it('Should fail when adding a role and the parent doesnt exists', function() {
+    var role = new Sc.Role('superadmin');
+
+    expect(function() { return Sc.ACL.addRole(role, 'superuser')}).to.throw(Error);
+  });
+
+  it('Should create a new allow rule', function() {
+    var allow = true;
+
+    Sc.ACL.allow('admin', 'edit', 'videos', Promise.resolve().then(function() {
+      if (allow) {
+        return true;
+      }
+
+      return false
+    }));
+
+    expect(Sc.ACL.hasRule('edit', 'videos', 'admin')).to.be.equal(true);
+    expect(Sc.ACL.getRule('edit', 'videos', 'admin', true).assert).is.an.instanceof(Promise);
   });
 });

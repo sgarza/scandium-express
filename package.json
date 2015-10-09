@@ -31,6 +31,8 @@
     "bluebird": "^2.10.2",
     "chai": "^3.3.0",
     "codeclimate-test-reporter": "^0.1.1",
-    "mocha": "^2.3.3"
+    "express": "^4.13.3",
+    "mocha": "^2.3.3",
+    "superagent": "^1.4.0"
   }
 }
