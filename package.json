@@ -1,6 +1,6 @@
 {
   "name": "scandium-express",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "ACL middleware for express",
   "main": "index.js",
   "scripts": {
