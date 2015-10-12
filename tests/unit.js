@@ -88,4 +88,28 @@ describe('Scandium-Express Unit Tests', function() {
     expect(Sc.ACL.hasRule('edit', 'videos', 'admin')).to.be.equal(true);
     expect(Sc.ACL.getRule('edit', 'videos', 'admin', true).assert).is.an.instanceof(Promise);
   });
+
+  it('Sc.Helpers.allOf Should return true if all the arguments are true', function() {
+    var allOf = Sc.Helpers.allOf(true, true, true, true, true);
+
+    expect(allOf).to.be.eql(true);
+  });
+
+  it('Sc.Helpers.allOf Should return false if one or more of the arguments are false', function() {
+    var allOf = Sc.Helpers.allOf(true, true, true, false, true);
+
+    expect(allOf).to.be.eql(false);
+  });
+
+  it('Sc.Helpers.anyOf Should return true if any of the args is true', function() {
+    var anyOf = Sc.Helpers.anyOf(false, false, true, false);
+
+    expect(anyOf).to.be.eql(true);
+  });
+
+  it('Sc.Helpers.anyOf Should return false if all of the args are false', function() {
+    var anyOf = Sc.Helpers.anyOf(false, false);
+
+    expect(anyOf).to.be.eql(false);
+  });
 });
